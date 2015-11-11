@@ -1,7 +1,8 @@
 %break large matrix down into smaller blocks    
 %function break_in_blocks(binaryTDM, matrixname)
+function binaryTDM = break_in_blocks_option2 (binaryTDM)
 
-load('binaryTDM.mat')
+%load('binaryTDM.mat')
 
 
 
@@ -81,41 +82,41 @@ Mz = 50*ones(1,mz);
         for b= 1:ay;
             for c= 1:az;
                 cutTDM800 = mat2cell (binaryTDM, [Ax], [Ay], [Az])
-                assignin('base', ['cutTDM800o' sprintf('%d_%d_%d',a,b,c)], cutTDM800{a,b,c});  %%%assignin doesn't allow brackets nor hyphen - nor double underscore__
-                %filename = ['cutTDM800_' sprintf('(%d_%d_%d)',a,b,c) '-(0_0_0)-(0_0_0)-(0_0_0)-(0_0_0).h5'];
-                %hdf5write(filename,sprintf('/cutTDM800{%d,%d,%d}',a,b,c),cutTDM800{a,b,c});
+                assignin('base', ['cutTDM800_' sprintf('%d%d%d',a,b,c)], cutTDM800{a,b,c});  %%%assignin doesn't allow brackets nor hyphen - nor double underscore__
+                filename = ['cutTDM800_' sprintf('%d%d%d',a,b,c) '_000_000_000_000.h5'];
+                hdf5write(filename,sprintf('/cutTDM800'),cutTDM800{a,b,c});
      
                 for d= 1:dx;
                     for e= 1:dy;
                         for f= 1:dz;
                             cutTDM400 = mat2cell (cutTDM800{a,b,c}, [Dx], [Dy], [Dz])
-                            assignin('base', ['cutTDM400o' sprintf('%d_%d_%do%d_%d_%d',a,b,c,d,e,f)], cutTDM400{d,e,f});
-                            %filename = ['cutTDM400_' sprintf('(%d_%d_%d)-(%d_%d_%d)',a,b,c,d,e,f) '-(0_0_0)-(0_0_0)-(0_0_0).h5'];
-                            %hdf5write(filename,sprintf('/cutTDM400{%d,%d,%d,%d,%d,%d}',a,b,c,d,e,f),cutTDM400{d,e,f});
+                            assignin('base', ['cutTDM400_' sprintf('%d%d%d_%d%d%d',a,b,c,d,e,f)], cutTDM400{d,e,f});
+                            filename = ['cutTDM400_' sprintf('%d%d%d_%d%d%d',a,b,c,d,e,f) '_000_000_000.h5'];
+                            hdf5write(filename,sprintf('/cutTDM400'),cutTDM400{d,e,f});
 
                                 for g= 1:gx;
                                     for h= 1:gy;
                                         for i= 1:gz;
                                             cutTDM200 = mat2cell (cutTDM400{d,e,f},  [Gx], [Gy], [Gz])
-                                            assignin('base', ['cutTDM200o' sprintf('%d_%d_%do%d_%d_%do%d_%d_%d',a,b,c,d,e,f,g,h,i)], cutTDM200{g,h,i});
-                                            %filename = ['cutTDM200_' sprintf('(%d_%d_%d)-(%d_%d_%d)-(%d_%d_%d)',a,b,c,d,e,f,g,h,i) '-(0_0_0)-(0_0_0).h5'];
-                                            %hdf5write(filename,sprintf('/cutTDM200{%d,%d,%d,%d,%d,%d,%d,%d,%d}',a,b,c,d,e,f,g,h,i),cutTDM200{g,h,i});
+                                            assignin('base', ['cutTDM200_' sprintf('%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i)], cutTDM200{g,h,i});
+                                            filename = ['cutTDM200_' sprintf('%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i) '_000_000.h5'];
+                                            hdf5write(filename,sprintf('/cutTDM200'),cutTDM200{g,h,i});
 
                                                 for j= 1:jx;
                                                     for k= 1:jy;
                                                         for l= 1:jz;
                                                         cutTDM100 = mat2cell (cutTDM200{g,h,i},  [Jx], [Jy], [Jz])
-                                                        assignin('base', ['cutTDM100o' sprintf('%d_%d_%do%d_%d_%do%d_%d_%do%d_%d_%d',a,b,c,d,e,f,g,h,i,j,k,l)], cutTDM100{j,k,l});
-                                                        %filename = ['cutTDM100_' sprintf('(%d_%d_%d)-(%d_%d_%d)-(%d_%d_%d)-(%d_%d_%d)',a,b,c,d,e,f,g,h,i,j,k,l) '-(0_0_0).h5'];                                          
-                                                        %hdf5write(filename,sprintf('/cutTDM100{%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d}',a,b,c,d,e,f,g,h,i,j,k,l),cutTDM100{j,k,l});
+                                                        assignin('base', ['cutTDM100_' sprintf('%d%d%d_%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i,j,k,l)], cutTDM100{j,k,l});
+                                                        filename = ['cutTDM100_' sprintf('%d%d%d_%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i,j,k,l) '_000.h5'];                                          
+                                                        hdf5write(filename,sprintf('/cutTDM100'),cutTDM100{j,k,l});
                                                         
                                                             for m= 1:mx;
                                                                 for n= 1:my;
                                                                     for p= 1:mz;
                                                                     cutTDM50 = mat2cell (cutTDM100{j,k,l},  [Mx], [My], [Mz])
-                                                                    assignin('base', ['cutTDM50o' sprintf('%d_%d_%do%d_%d_%do%d_%d_%do%d_%d_%do%d_%d_%d',a,b,c,d,e,f,g,h,i,j,k,l,m,n,p)], cutTDM50{m,n,p});
-                                                                    filename = ['cutTDM50_' sprintf('(%d_%d_%d)-(%d_%d_%d)-(%d_%d_%d)-(%d_%d_%d)-(%d_%d_%d)',a,b,c,d,e,f,g,h,i,j,k,l,m,n,p) '.h5'];                                          
-                                                                    hdf5write(filename,sprintf('/cutTDM50{%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d}',a,b,c,d,e,f,g,h,i,j,k,l,m,n,p),cutTDM50{m,n,p});
+                                                                    assignin('base', ['cutTDM50_' sprintf('%d%d%d_%d%d%d_%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i,j,k,l,m,n,p)], cutTDM50{m,n,p});
+                                                                    filename = ['cutTDM50_' sprintf('%d%d%d_%d%d%d_%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i,j,k,l,m,n,p) '.h5'];                                          
+                                                                    hdf5write(filename,sprintf('/cutTDM50'),cutTDM50{m,n,p});
                                                                     end;
                                                                 end;
                                                             end;                                                        
@@ -136,10 +137,10 @@ Mz = 50*ones(1,mz);
             end;
         end;
     end
-           
     
-  save ('11TPre_all_blocks_option2_new','-v7.3');  
-  
     
+    
+  save( [OutputPath, CTName,'_','blocks_option2'],'-v7.3')
+    
+end  
  
-%end

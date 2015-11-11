@@ -8,7 +8,7 @@ function main_preprocessing(zmin,zmax,pixel_threshold,sesize,matrixname, GlobalP
     binaryTDM = image_load_and_binarize_3D(first_radius,first_centres, zmax, zmin, offset_centres,pixel_threshold,sesize,matrixname, GlobalPath, CTName, OutputPath);
         
     %Break in Blocks            
-    %break_in_blocks(binaryTDM, matrixname)
+    break_in_blocks_option2(binaryTDM)
     
     
 end

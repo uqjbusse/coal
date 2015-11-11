@@ -1,4 +1,4 @@
-function [PropsFracsPos, PropsFracsNeg, BW] =breakpoints(BW, display_images,fs)    
+function [PropsFracsPos, PropsFracsNeg, BW] =breakpoints(BW, display_images,fs, pixelsize)    
 
 %% Breakpoints calculation ---------------------------------------
         %calculate the breakpoints of the skeleton

@@ -1,7 +1,8 @@
-function [BW]=paper2Dpreprocessing (display_images, fs)
+function [BW]=paper2Dpreprocessing (display_images, fs, pixelsize)
  
 j=296;
-scan = imread (['../data/ctscans/11Tpre (', num2str(j), ').jpg']);
+scan = imread (['/home/uqjbusse/hdrive/project work/CT scans/hail creek coal/384811/ctscans/11Tpre (', num2str(j), ').jpg']);
+addpath(genpath('/home/uqjbusse/coal_git/external_librairies'))
 
 %% CROPPING------------------------------------------------------------
 cropx=520;
@@ -66,65 +67,69 @@ end
         xlabel('Grayscale value', 'Fontsize', fs)
     end
 
-%% FILTERING---------------------------------------------------
-% %% filtering based on size of objects -FIND STATISTICAL CRITERION
- LCC = bwlabel(scanBW);
- PropsLCC = regionprops(LCC,'Area');   
-
-    for i=1:length(PropsLCC);
-                   AreaObjects(i,1)=(PropsLCC(i).Area);
-    end
-    
-       
-    if (display_images)
-        [uniquesAO,numUniqueAO] = count_unique(AreaObjects);
-        AreaObjectsRealisation=horzcat(uniquesAO,numUniqueAO)
-
-        bar(AreaObjectsRealisation(:,1),AreaObjectsRealisation(:,2),'k')
-        title('Small clusters occuring','Fontsize', fs); ;
-        xlabel ('Area [pixel]','Fontsize', fs);
-        ylabel ('Realisations','Fontsize', fs);
-        set(gca,'FontSize',fs);
-        ylim([0 max(AreaObjectsRealisation(:,2))+5]);
-        xlim([0 100]);
-    end
-
-% %Filtered 
-pixel_threshold=35;  %filter: delete elements <20 pixel, maybe rather medfilt2
-picFilt = bwareaopen(scanBW, pixel_threshold);
-% B = medfilt2(scanBW)
-% figure
-% imshow(B)
 
 %% DILATION EROSION---------------------------------------ADD------------
 % dilated eroded
 sesize = 2;
              %dilation erosion
              se = strel('disk',sesize);
-             picFiltDil = imdilate(picFilt,se);
-             picFiltDilEro=imerode(picFiltDil,se);
-             
+             picDil = imdilate(scanBW,se);
+             picDilEro=imerode(picDil,se);
+
+    
+    
+  
+%                             %% FILTERING---------------------------------------------------
+%                             % %% filtering based on size of objects -FIND STATISTICAL CRITERION
+%                              LCC = bwlabel(picDilEro);
+%                              PropsLCC = regionprops(LCC,'Area');   
+% 
+%                                 for i=1:length(PropsLCC);
+%                                                AreaObjects(i,1)=(PropsLCC(i).Area);
+%                                 end
+% 
+% 
+%                                 if (display_images)
+%                                     [uniquesAO,numUniqueAO] = count_unique(AreaObjects);
+%                                     AreaObjectsRealisation=horzcat(uniquesAO,numUniqueAO)
+%                                     figure;
+%                                     bar(AreaObjectsRealisation(:,1),AreaObjectsRealisation(:,2),'k')
+%                                     title('Small clusters occuring','Fontsize', fs); ;
+%                                     xlabel ('Area [pixel]','Fontsize', fs);
+%                                     ylabel ('Realisations','Fontsize', fs);
+%                                     set(gca,'FontSize',fs);
+%                                     ylim([0 max(AreaObjectsRealisation(:,2))+5]);
+%                                     xlim([0 100]);
+%                                 end
+% 
+%                             % %Filtered 
+%                             pixel_threshold=35;  %filter: delete elements <20 pixel, maybe rather medfilt2
+%                             picDilEroFilt = bwareaopen(picDilEro, pixel_threshold);
+%                             % B = medfilt2(scanBW)
+%                             % figure
+%                             % imshow(B)  
+                 
 %filtered, dilated, eroded picture
 
     
     if(display_images)
         figure;
-        subplot(1, 3, 1);
-        imshow (picFilt);
-        title('Filtered','Fontsize', fs);
+        subplot(1, 2, 1);
+        imshow (picDil);
+        title('Dilated','Fontsize', fs);
         
-        subplot(1, 3, 2);
-        imshow (picFiltDil);
-        title('Dilated', 'Fontsize', fs);
+        subplot(1, 2, 2);
+        imshow (picDilEro);
+        title('Eroded', 'Fontsize', fs);
         
-        subplot(1, 3, 3);
-        imshow (picFiltDilEro);
-        title('Eroded','Fontsize', fs);
+%                                     subplot(1, 3, 3);
+%                                     imshow (picDilEroFilt);
+%                                     title('Filtered','Fontsize', fs);
     end  
-             
+ 
 
 %% rename result to BW
 
-BW=picFiltDilEro;
+BW=picDilEro;
 
 end

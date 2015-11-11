@@ -1,4 +1,4 @@
-function [FracsPosFinal, FracsNegFinal] = Clustering (PropsFracsPos, PropsFracsNeg, BW, display_images,fs)
+function [FracsPosFinal, FracsNegFinal] = Clustering (PropsFracsPos, PropsFracsNeg, BW, display_images,fs, pixelsize)
 
 
 %% 1. ORIENTATION double check--------------------------------------------
@@ -95,11 +95,17 @@ img = false(800,800)
  %Positive
     for i=1:length(MinorAxisFracsPos);
                WidthFracsPos(i,1)=(MinorAxisFracsPos(i).MinorAxisLength);
+               %Fracture Widths in mm
+               WidthFracsPos(i,2)= WidthFracsPos(i,1)*pixelsize
     end
   
+ 
+    
  %Negative
     for i=1:length(MinorAxisFracsNeg);
                WidthFracsNeg(i,1)=(MinorAxisFracsNeg(i).MinorAxisLength);
+               %Fracture Widths in mm
+               WidthFracsNeg(i,2)= WidthFracsNeg(i,1)*pixelsize
     end   
     
  %Width Histogramm
@@ -107,17 +113,17 @@ img = false(800,800)
      
      myBins = linspace(0,50,20); % pick my own bin locations
     % Hists will be the same size because we set the bin locations:
-    y1 = hist(WidthFracsPos, myBins);   
-    y2 = hist(WidthFracsNeg, myBins);
+    y1 = hist(WidthFracsPos(:,2), myBins);   
+    y2 = hist(WidthFracsNeg(:,2), myBins);
 
     % plot the results:
     figure;
     h=bar(myBins, [y1;y2]');
     title('Width distribution for clustering','FontSize',fs);
-    xlabel ('Fracture width ~ minor axis length [pixel]','FontSize',fs);
+    xlabel ('Fracture width ~ minor axis length [mm]','FontSize',fs);
     ylabel ('No of realisations','FontSize',fs);
     legend ('Positively orientated fractures','Negatively orientated fractures','FontSize',fs);
-    xlim([0 50]);
+    xlim([0 1]);
     set(h(1),'FaceColor',[0.2 0.4 0.6],'EdgeColor','k');
     set(h(2),'FaceColor',[0.6 0.8 0.8],'EdgeColor','k');
     set(gca,'FontSize',fs);

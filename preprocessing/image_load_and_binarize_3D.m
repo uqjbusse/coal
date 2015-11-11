@@ -74,11 +74,8 @@ function binaryTDM = image_load_and_binarize_3D(first_radius,first_centres, zmax
                   
      end;
      
-     save( [OutputPath, CTName, '_binaryTDM'],'-v7.3')
-     
-     %final output named as defined in script naming=name_matrix (matrixname);
-    %save ([matrixname,'_aligned']);
-    
+     save( [OutputPath, CTName,'_','binaryTDM'],'-v7.3')
+      
 end
 
     
