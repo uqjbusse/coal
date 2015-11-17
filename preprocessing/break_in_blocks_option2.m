@@ -1,6 +1,6 @@
 %break large matrix down into smaller blocks    
 %function break_in_blocks(binaryTDM, matrixname)
-function binaryTDM = break_in_blocks_option2 (binaryTDM)
+function binaryTDM = break_in_blocks_option2 (binaryTDM,CTName,OutputPath)
 
 %load('binaryTDM.mat')
 
@@ -113,10 +113,10 @@ Mz = 50*ones(1,mz);
                                                             for m= 1:mx;
                                                                 for n= 1:my;
                                                                     for p= 1:mz;
-                                                                    cutTDM50 = mat2cell (cutTDM100{j,k,l},  [Mx], [My], [Mz])
-                                                                    assignin('base', ['cutTDM50_' sprintf('%d%d%d_%d%d%d_%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i,j,k,l,m,n,p)], cutTDM50{m,n,p});
-                                                                    filename = ['cutTDM50_' sprintf('%d%d%d_%d%d%d_%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i,j,k,l,m,n,p) '.h5'];                                          
-                                                                    hdf5write(filename,sprintf('/cutTDM50'),cutTDM50{m,n,p});
+                                                                    cutTDM050 = mat2cell (cutTDM100{j,k,l},  [Mx], [My], [Mz])
+                                                                    assignin('base', ['cutTDM050_' sprintf('%d%d%d_%d%d%d_%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i,j,k,l,m,n,p)], cutTDM050{m,n,p});
+                                                                    filename = ['cutTDM050_' sprintf('%d%d%d_%d%d%d_%d%d%d_%d%d%d_%d%d%d',a,b,c,d,e,f,g,h,i,j,k,l,m,n,p) '.h5'];                                          
+                                                                    hdf5write(filename,sprintf('/cutTDM050'),cutTDM050{m,n,p});
                                                                     end;
                                                                 end;
                                                             end;                                                        

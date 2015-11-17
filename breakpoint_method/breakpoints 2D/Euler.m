@@ -33,6 +33,7 @@ figure;
                EulerNr(i,1)=(EulerFracsNetworkFinal(i).EulerNumber);
     end
       
+   [uniquesEuler,numUniqueEuler] = count_unique(EulerNr);
   
       
     % plot the results:

@@ -96,7 +96,7 @@ img = false(800,800)
     for i=1:length(MinorAxisFracsPos);
                WidthFracsPos(i,1)=(MinorAxisFracsPos(i).MinorAxisLength);
                %Fracture Widths in mm
-               WidthFracsPos(i,2)= WidthFracsPos(i,1)*pixelsize
+               WidthFracsPos(i,2)= WidthFracsPos(i,1)*pixelsize;
     end
   
  
@@ -105,7 +105,7 @@ img = false(800,800)
     for i=1:length(MinorAxisFracsNeg);
                WidthFracsNeg(i,1)=(MinorAxisFracsNeg(i).MinorAxisLength);
                %Fracture Widths in mm
-               WidthFracsNeg(i,2)= WidthFracsNeg(i,1)*pixelsize
+               WidthFracsNeg(i,2)= WidthFracsNeg(i,1)*pixelsize;
     end   
     
  %Width Histogramm
@@ -129,13 +129,14 @@ img = false(800,800)
     set(gca,'FontSize',fs);
  end
 
-    m1=max(WidthFracsPos);
-    m2=max(WidthFracsNeg);
+    m1=mean(WidthFracsPos);
+    m2=mean(WidthFracsNeg);
     
-    maxWidth=max(m1,m2);
+    meanWidth=ceil((m1(1,1)+m2(1,1))/2);
     
- %POSITIVE dilation erosion  -- define what rho (minimum length of element) is based on
- rho=maxWidth;
+ %POSITIVE dilation erosion  --  rho (minimum length of element) is based
+ %on mean Width of elements
+ rho=meanWidth;
  theta=45;
  se=strel('line', rho, theta) ; 
  FracsPosDil = imdilate(FracsPos,se);
@@ -147,8 +148,8 @@ img = false(800,800)
  title ('Positive Fractures after dilation and erosion based on Orientation and Width','FontSize',fs); 
  end
  
- %NEGATIVE dilation erosion  -- define what rho is based on
- rho=maxWidth;
+ %NEGATIVE dilation erosion  -- rho is based on mean Width of elements
+ rho=meanWidth;
  theta=-45;
  se=strel('line', rho, theta) ; 
  FracsNegDil = imdilate(FracsNeg,se);

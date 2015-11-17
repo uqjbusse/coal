@@ -8,10 +8,10 @@ function script_preprocessing
     %breakinblocks=1; % 1 or 2 or 3 
     
     tic;
-    zmin= 296;  %nr of first scan Pre
+    zmin= 296;  %nr of first scan Pre 296
     zmax= 1296; % nr of last scan Pre 1296
-    pixel_threshold=20;  %filter: delete elements <20 pixel 
-    sesize=4;   
+    pixel_threshold=0;  %filter: delete elements <20 pixel 
+    sesize=2;   
     matrixname = '11TPre'; %name output as desired, eg 11TPre, 
                             %to save preprocessed 3D matrix and
                             %do registration with post matrix
@@ -21,7 +21,7 @@ function script_preprocessing
        
 
    % main_preprocessing(zmin,zmax,binarylevel,pixel_threshold,sesize,matrixname)
-    main_preprocessing(zmin,zmax,pixel_threshold,sesize,matrixname,GlobalPath, CTName, OutputPath)
+   main_preprocessing(zmin,zmax,pixel_threshold,sesize,matrixname,GlobalPath, CTName, OutputPath)
     
     toc
 

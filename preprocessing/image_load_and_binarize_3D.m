@@ -1,4 +1,4 @@
-function binaryTDM = image_load_and_binarize_3D(first_radius,first_centres, zmax, zmin, offset_centres,pixel_threshold,sesize,matrixname, GlobalPath, CTName,  OutputPath)
+function binaryTDM = image_load_and_binarize_3D(first_radius,first_centres, zmax, zmin, offset_centres,pixel_threshold,sesize,matrixname, GlobalPath, CTName, OutputPath)
 
     % Load the aligned 3D matrix (full size until now), cut out inner
     % square from circle and binarize.
@@ -28,15 +28,13 @@ function binaryTDM = image_load_and_binarize_3D(first_radius,first_centres, zmax
         display ('Domain is NOT cubic')
     end
     
-  
-    
-    
-    %three dimensionsional matrix
-    
-    binaryTDM = zeros(lengthx,lengthy,lengthz); 
-    
+    %---------------------------------------------------------------------
+%   % average binarylevel based on Rosins criterion
+%      
+%     binarylevelALL = zeros(lengthz,1); 
+%     
      for j=zmin:zmax-1;
-         scan = imread  ([GlobalPath, CTName,' (', num2str(zmin), ').jpg']); 
+         scan = imread  ([GlobalPath, CTName,' (', num2str(j), ').jpg']); 
          
          
          %include nested function for 
@@ -49,12 +47,51 @@ function binaryTDM = image_load_and_binarize_3D(first_radius,first_centres, zmax
 
              %crop and binarize
              scan = imcrop (aligned,[cropx cropy croplength croplength]); 
-             scan= scan(:,:,1)
+             scan= scan(:,:,1);
              
                %%binarylevel based on Rosins criterion on histogram
-                h           = imhist(scan)
-                RT          = RosinThreshold(h)
+                h           = imhist(scan);
+                RT          = RosinThreshold(h);
                 binarylevel = RT/266;             
+          
+             
+         %save in an array         
+         l=(j-zmin)+1;
+         display (['Current slide = ', num2str(l)]);
+         binarylevelALL(l,1) = binarylevel;
+                  
+     end;
+  
+            
+     binarylevel = mean (binarylevelALL(:,1));
+     
+       
+    
+  %---------------------------------------------------------------  
+    %three dimensionsional matrix
+    
+    binaryTDM = zeros(lengthx,lengthy,lengthz); 
+    
+     for j=zmin:zmax-1;
+         scan = imread  ([GlobalPath, CTName,' (', num2str(j), ').jpg']); 
+         
+         
+         %include nested function for 
+             %align
+             x = (((offset_centres(1,1))/(zmax-zmin))*(j-zmin));
+             y = (((offset_centres(1,2))/(zmax-zmin))*(j-zmin));
+
+             T = maketform('affine',[1 0 x;0 1 y; 0 0 1]');
+             aligned = imtransform(scan,T,'XData',[1 size(scan,2)],'YData',[1 size(scan,1)]);
+
+             %crop and binarize
+             scan = imcrop (aligned,[cropx cropy croplength croplength]); 
+             scan= scan(:,:,1);
+             
+%                %%binarylevel based on Rosins criterion on histogram
+%                 h           = imhist(scan)
+%                 RT          = RosinThreshold(h)
+%                 binarylevel = RT/266;             
              
              scan = im2bw(scan, binarylevel);  
          
@@ -64,9 +101,9 @@ function binaryTDM = image_load_and_binarize_3D(first_radius,first_centres, zmax
              scan = imdilate(scan,se);
              scan = imerode(scan,se);
              
-             %filter
-             scan = bwareaopen(scan, pixel_threshold);  %elements smaller than 20 pixels are deleted
-             
+%              %filter not used
+%              %scan = bwareaopen(scan, pixel_threshold);  %elements smaller than 20 pixels are deleted
+%              
          %save in an array         
          l=(j-zmin)+1;
          display (['Current slide = ', num2str(l)]);

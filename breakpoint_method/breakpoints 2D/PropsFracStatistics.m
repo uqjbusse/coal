@@ -1,4 +1,4 @@
-function [NoPos, NoNeg, FracDensityPos, FracDensityNeg, FracDensityTotal, AreaFracsNeg, AreaFracsPos,PropsFracsPosFinal,PropsFracsNegFinal, AverageSpacingListPos, AverageSpacingListNeg, AverageSpacingTotalPos, AverageSpacingTotalNeg ] = PropsFracStatistics (FracsPosFinal, FracsNegFinal, BW, display_images,fs)
+function [NoPos, NoNeg, FracDensityPos, FracDensityNeg, FracDensityTotal, AreaFracsNeg, AreaFracsPos,PropsFracsPosFinal,PropsFracsNegFinal, AverageSpacingListPos, AverageSpacingListNeg, AverageSpacingTotalPos, AverageSpacingTotalNeg ] = PropsFracStatistics (FracsPosFinal, FracsNegFinal, BW, display_images,fs, pixelsize)
 
 %% read all information
 LCCFracsPosFinal = bwlabel(FracsPosFinal);
@@ -13,25 +13,31 @@ NoPos=length(PropsFracsPosFinal);
 %Total number negative fracs
 NoNeg=length(PropsFracsNegFinal);
 
+pixelarea=pixelsize^2;
+
 %Total Fracture density
     %Positive
     for i=1:length(PropsFracsPosFinal);
                AreaFracsPos(i,1)=(PropsFracsPosFinal(i).Area);
+               AreaFracsPos(i,2)=AreaFracsPos(i,1)*pixelarea;
     end
     SumAreaFracsPos=sum(AreaFracsPos);
-
-    FracDensityPos= SumAreaFracsPos/(prod(size(BW)));
+    
+    FracDensityPos(1,1)= SumAreaFracsPos(1,1)/(prod(size(BW)));
+    FracDensityPos(1,2)= SumAreaFracsPos(1,2)/(prod(size(BW))*pixelarea);
     
     %Negative
     for i=1:length(PropsFracsNegFinal);
                AreaFracsNeg(i,1)=(PropsFracsNegFinal(i).Area);
+               AreaFracsNeg(i,2)=AreaFracsNeg(i,1)*pixelarea;
     end
     SumAreaFracsNeg=sum(AreaFracsNeg);
-
-    FracDensityNeg= SumAreaFracsNeg/(prod(size(BW)));
+ 
+    FracDensityNeg(1,1)= SumAreaFracsNeg(1,1)/(prod(size(BW)));
+    FracDensityNeg(1,2)= SumAreaFracsNeg(1,2)/(prod(size(BW))*pixelarea);
     
     %Total
-    FracDensityTotal= (SumAreaFracsPos+SumAreaFracsNeg)/(prod(size(BW)));
+    FracDensityTotal= (SumAreaFracsPos(1,1)+SumAreaFracsNeg(1,1))/(prod(size(BW)));
     
     
 %% Display -------------------------------------------------------    
@@ -70,20 +76,20 @@ NoNeg=length(PropsFracsNegFinal);
     
 %% Area Histogram -----------------------------------------------------
   
-    myBins = linspace(0,7500,20); % pick my own bin locations
+    myBins = linspace(0,12,12); % pick my own bin locations
     % Hists will be the same size because we set the bin locations:
-    y1 = hist(AreaFracsPos, myBins);   
-    y2 = hist(AreaFracsNeg, myBins);
+    y1 = hist(AreaFracsPos(:,2), myBins);   
+    y2 = hist(AreaFracsNeg(:,2), myBins);
 
     % plot the results:
     figure;
     h=bar(myBins, [y1;y2]');
     title('Size distribution','FontSize',fs);
-    xlabel ('Fracture size [pixel]','FontSize',fs );
+    xlabel ('Fracture size [mm^2]','FontSize',fs );
     ylabel ('No of realisations','FontSize',fs);
     legend ('Positively orientated fractures','Negatively orientated fractures','FontSize',fs);
-    xlim([-200 6000]);
-    ylim([0 16]);
+    xlim([-1 14]);
+    ylim([0 130]);
     set(h(1),'FaceColor',[0.2 0.4 0.6],'EdgeColor','k');
     set(h(2),'FaceColor',[0.6 0.8 0.8],'EdgeColor','k');
     set(gca,'FontSize',fs);
@@ -92,49 +98,57 @@ NoNeg=length(PropsFracsNegFinal);
  %Positive
     for i=1:length(PropsFracsPosFinal);
                LengthFracsPos(i,1)=(PropsFracsPosFinal(i).MajorAxisLength);
+               LengthFracsPos(i,2)= LengthFracsPos(i,1)*pixelsize;
     end
      
     %Negative
     for i=1:length(PropsFracsNegFinal);
                LengthFracsNeg(i,1)=(PropsFracsNegFinal(i).MajorAxisLength);
+               LengthFracsNeg(i,2)= LengthFracsNeg(i,1)*pixelsize;
     end
  
   
-     myBins = linspace(0,800,40); % pick my own bin locations
+     myBins = linspace(0,30,20); % pick my own bin locations
     % Hists will be the same size because we set the bin locations:
-    y1 = hist(LengthFracsPos, myBins);   
-    y2 = hist(LengthFracsNeg, myBins);
+    y1 = hist(LengthFracsPos(:,2), myBins);   
+    y2 = hist(LengthFracsNeg(:,2), myBins);
 
  % plot the results:
-    figure;
+    %figure;
     h=bar(myBins, [y1;y2]');
     display (h)
     title('Length distribution','FontSize',fs);
-    xlabel ('Length [pixel]','FontSize',fs );
+    xlabel ('Length [mm]','FontSize',fs );
     ylabel ('No of realisations','FontSize',fs );
     legend ('Positively orientated fractures','Negatively orientated fractures');
     set(gca,'FontSize',fs);
-    xlim([-40 850]);
-    ylim([0 15]);
+    xlim([-2 30]);
+    ylim([0 80]);
     set(h(1),'FaceColor',[0.2 0.4 0.6],'EdgeColor','k');
     set(h(2),'FaceColor',[0.6 0.8 0.8],'EdgeColor','k');
     
     %-----------------------------------------------------
     %barplot with all length and histogram fitting
-    LengthFracsTotal=vertcat(LengthFracsPos,LengthFracsNeg);
+    LengthFracsTotal=vertcat(LengthFracsPos(:,2),LengthFracsNeg(:,2));
     
-     myBins = linspace(0,800,40); % pick my own bin locations
+       
+    %-----------------------------------------------------
+    %barplot with all length and histogram fitting
+    LengthFracsTotal=vertcat(LengthFracsPos(:,2),LengthFracsNeg(:,2));
+    
+     myBins = linspace(0,30,20); % pick my own bin locations
     % Hists will be the same size because we set the bin locations:
     yTotal = hist(LengthFracsTotal, myBins);
-    h=histfit(LengthFracsTotal,40, 'gp')
+    h=histfit(LengthFracsTotal,20, 'gp')
     set(h(1),'FaceColor',[0.4 0.6 0.8],'EdgeColor','k');
     title('Length distribution','FontSize',fs);
-    xlabel ('Length [pixel]','FontSize',fs);
+    xlabel ('Length [mm]','FontSize',fs);
     ylabel ('No of realisations','FontSize',fs);
     legend ('Pos. and neg. orientated fractures');
     set(gca,'FontSize',fs);
-    xlim([-40 850]);
-    ylim([0 15]);
+    xlim([-1 30]);
+    ylim([0 180]);
+    
     
             
 %     % plot the results:
@@ -157,19 +171,19 @@ NoNeg=length(PropsFracsNegFinal);
   %% Ratio min major-------------------------------------------
 figure;
 for i=1:length(PropsFracsPosFinal);
-            x=PropsFracsPosFinal(i).MajorAxisLength;
-            y=PropsFracsPosFinal(i).MinorAxisLength;
+            x=PropsFracsPosFinal(i).MajorAxisLength*pixelsize;
+            y=PropsFracsPosFinal(i).MinorAxisLength*pixelsize;
             plot(x,y,'s','MarkerEdgeColor','k','MarkerFaceColor',[0.2 0.4 0.6],'MarkerSize',16);
             hold on; 
                 for i=1:length(PropsFracsNegFinal);
-                x=PropsFracsNegFinal(i).MajorAxisLength;
-                y=PropsFracsNegFinal(i).MinorAxisLength;
+                x=PropsFracsNegFinal(i).MajorAxisLength*pixelsize;
+                y=PropsFracsNegFinal(i).MinorAxisLength*pixelsize;
                 plot(x,y,'s','MarkerEdgeColor','k','MarkerFaceColor',[0.6 0.8 0.8],'MarkerSize',16);
                 end
 end          
             hold on
-            xlabel ('Major Axis Length [pixel]','FontSize',fs);
-            ylabel ('Minor Axis Length [pixel]','FontSize',fs);
+            xlabel ('Major Axis Length [mm]','FontSize',fs);
+            ylabel ('Minor Axis Length [mm]','FontSize',fs);
             title ('Ratio between major and minor axis length','FontSize',fs);
             legend ('Positively orientated fractures','Negatively orientated fractures');     
             set(gca,'FontSize',fs);
@@ -201,7 +215,7 @@ end
     title('Eccentricity distribution','FontSize',fs);
     xlabel ('Eccentricity','FontSize',fs);
     ylabel ('No of realisations','FontSize',fs);
-    legend ('Positively orientated fractures','Negatively orientated fractures','FontSize',fs);
+    legend ('Positively orientated fractures','Negatively orientated fractures',fs);
     xlim([0 1.1]);
     set(h(1),'FaceColor',[0.2 0.4 0.6],'EdgeColor','k');
     set(h(2),'FaceColor',[0.6 0.8 0.8],'EdgeColor','k');
@@ -211,49 +225,51 @@ end
  %% Perimeter over area diagram----------------------------------------  
     figure;
     for i=1:length(PropsFracsPosFinal);
-                x=PropsFracsPosFinal(i).Area;
-                y=PropsFracsPosFinal(i).Perimeter;
+                x=PropsFracsPosFinal(i).Area*pixelarea;
+                y=PropsFracsPosFinal(i).Perimeter*pixelsize;
                 plot(x,y,'s','MarkerEdgeColor','k','MarkerFaceColor',[0.2 0.4 0.6],'MarkerSize',16);
                 hold on; 
                     for i=1:length(PropsFracsNegFinal);
-                    x=PropsFracsNegFinal(i).Perimeter;
-                    y=PropsFracsNegFinal(i).Area;
+                    x=PropsFracsNegFinal(i).Area*pixelarea;
+                    y=PropsFracsNegFinal(i).Perimeter*pixelsize;
                     plot(x,y,'s','MarkerEdgeColor','k','MarkerFaceColor',[0.6 0.8 0.8],'MarkerSize',16);
                     end
     end          
                 hold on
-                xlabel ('Area [pixel]','FontSize',fs);
-                ylabel ('Perimeter [pixel]','FontSize',fs);
+                xlabel ('Area [mm^2]','FontSize',fs);
+                ylabel ('Perimeter [mm]','FontSize',fs);
                 title ('Ratio between perimeter and area','FontSize',fs);
                 legend ('Positively orientated fractures','Negatively orientated fractures');
                 set(gca,'FontSize',fs);
 
+ 
+                
 
   %% Fracture width-----------------------------------------------------
     %Positive
     for i=1:length(PropsFracsPosFinal);
-               WidthFracsPos(i,1)=(PropsFracsPosFinal(i).MinorAxisLength);
+               WidthFracsPos(i,1)=(PropsFracsPosFinal(i).MinorAxisLength*pixelsize);
     end
   
  %Negative
     for i=1:length(PropsFracsNegFinal);
-               WidthFracsNeg(i,1)=(PropsFracsNegFinal(i).MinorAxisLength);
+               WidthFracsNeg(i,1)=(PropsFracsNegFinal(i).MinorAxisLength*pixelsize);
     end   
     
  %Width Histogramm
-    myBins = linspace(0,50,20); % pick my own bin locations
+    myBins = linspace(0,2.5,20); % pick my own bin locations
     % Hists will be the same size because we set the bin locations:
     y1 = hist(WidthFracsPos, myBins);   
     y2 = hist(WidthFracsNeg, myBins);
 
     % plot the results:
-    figure;
+    %figure;
     h=bar(myBins, [y1;y2]');
     title('Width distribution','FontSize',fs);
-    xlabel ('Fracture width ~ minor axis length [pixel]','FontSize',fs);
+    xlabel ('Fracture width [mm]','FontSize',fs);
     ylabel ('No of realisations','FontSize',fs);
     legend ('Positively orientated fractures','Negatively orientated fractures','FontSize',fs);
-    xlim([0 50]);
+    xlim([0 2.5]);
     set(h(1),'FaceColor',[0.2 0.4 0.6],'EdgeColor','k');
     set(h(2),'FaceColor',[0.6 0.8 0.8],'EdgeColor','k');
     set(gca,'FontSize',fs);       
@@ -332,16 +348,7 @@ for i=1:length(ProfilePos);
     if (ProfilePos(1,i).NoPeaks) <=1
     AverageSpacingListPos(1,i) = 0   
     else
-    AverageSpacingListPos(1,i) = (ProfilePos(1,i).AverageSpacing);
-    end
-end
-AverageSpacingTotalPos=mean(AverageSpacingListPos(AverageSpacingListPos~=0))
-
-for i=1:length(ProfilePos);
-    if (ProfilePos(1,i).NoPeaks) <=1
-    AverageSpacingListPos(1,i) = 0   
-    else
-    AverageSpacingListPos(1,i) = (ProfilePos(1,i).AverageSpacing);
+    AverageSpacingListPos(1,i) = (ProfilePos(1,i).AverageSpacing*pixelsize);
     end
 end
 AverageSpacingTotalPos=mean(AverageSpacingListPos(AverageSpacingListPos~=0))
@@ -422,7 +429,7 @@ for i=1:length(ProfileNeg);
     if (ProfileNeg(1,i).NoPeaks) <=1
     AverageSpacingListNeg(1,i) = 0   
     else
-    AverageSpacingListNeg(1,i) = (ProfileNeg(1,i).AverageSpacing);
+    AverageSpacingListNeg(1,i) = (ProfileNeg(1,i).AverageSpacing*pixelsize);
     end
 end
 AverageSpacingTotalNeg=mean(AverageSpacingListNeg(AverageSpacingListNeg~=0))
@@ -430,7 +437,7 @@ AverageSpacingTotalNeg=mean(AverageSpacingListNeg(AverageSpacingListNeg~=0))
 
 %%SPACING HISTOGRAM
     figure;
-     myBins = linspace(0,240,20); % pick my own bin locations
+     myBins = linspace(0,15,20); % pick my own bin locations
     % Hists will be the same size because we set the bin locations:
     y1 = hist(AverageSpacingListPos, myBins);   
     y2 = hist(AverageSpacingListNeg, myBins);
@@ -440,11 +447,11 @@ AverageSpacingTotalNeg=mean(AverageSpacingListNeg(AverageSpacingListNeg~=0))
     h=bar(myBins, [y1;y2]');
     display (h)
     title('Spacing distribution','FontSize',fs);
-    xlabel ('Spacing','FontSize',fs);
+    xlabel ('Spacing [mm]','FontSize',fs);
     ylabel ('No of realisations','FontSize',fs);
     legend ('Positively orientated fractures','Negatively orientated fractures','FontSize',fs);
-    xlim([-20 240]);
-    ylim([0 20]);
+    xlim([-2 15]);
+    ylim([0 15]);
     set(h(1),'FaceColor',[0.2 0.4 0.6],'EdgeColor','k');
     set(h(2),'FaceColor',[0.6 0.8 0.8],'EdgeColor','k');
     set(gca,'FontSize',fs);

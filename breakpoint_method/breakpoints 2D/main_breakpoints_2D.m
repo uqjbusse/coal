@@ -11,7 +11,7 @@ function [FracsPosFinal, FracsNegFinal, NoPos, NoNeg, FracDensityPos, FracDensit
    
     
     %extract information and display statistics
-    [NoPos, NoNeg, FracDensityPos, FracDensityNeg, FracDensityTotal, AreaFracsNeg, AreaFracsPos,PropsFracsPosFinal,PropsFracsNegFinal, AverageSpacingListPos, AverageSpacingListNeg, AverageSpacingTotalPos, AverageSpacingTotalNeg] = PropsFracStatistics (FracsPosFinal, FracsNegFinal, BW, display_images, fs)
+    [NoPos, NoNeg, FracDensityPos, FracDensityNeg, FracDensityTotal, AreaFracsNeg, AreaFracsPos,PropsFracsPosFinal,PropsFracsNegFinal, AverageSpacingListPos, AverageSpacingListNeg, AverageSpacingTotalPos, AverageSpacingTotalNeg] = PropsFracStatistics (FracsPosFinal, FracsNegFinal, BW, display_images, fs, pixelsize)
     
      %Rose plot with Info on orientation
     [OrientationPosRose,OrientationNegRose] = PropsFracOrientation (FracsPosFinal, FracsNegFinal,PropsFracsPosFinal,PropsFracsNegFinal, display_images, fs)

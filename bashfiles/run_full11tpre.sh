@@ -1,21 +1,13 @@
 BashPath='/home/uqjbusse/numerical/mechsys_frac_flow/modelling/full_run_11Tpre/'
 RunPath='/home/uqjbusse/numerical/mechsys_frac_flow/coalflow/coalflow'
 
-cd
-cd BashPath
-
-
-# BashPath=`dirname $BashFile`
-BashFile=$(readlink -f $0)
-GeomPath=$( printf '%s/geometry' $BashPath)
-
-
+angles=(60 120 180 240 300 360)
 
 name1=cutTDM800
 name2=cutTDM400
 name3=cutTDM200
 name4=cutTDM100
-name5=cutTDM50
+name5=cutTDM050
 
 dx1=800
 dy1=800
@@ -37,33 +29,13 @@ dx5=50
 dy5=50
 dz5=50
 
+cd
+cd BashPath
 
 
-
-# mkdir $file  
-# echo "=============================================="
-# echo "Running Sample" $file  
-#     cd $BashPath 
-#     cd $file 
-
-#     for th in 60.0 180.0 300.0
-#     do
-#         echo "th Parameter" $th  
-#         mkdir th$th
-#         cd th$th
-#         cp $BashPath/coalflow.inp .
-#         sed -i s/pPath/$fileh5/g coalflow.inp
-#         sed -i s/pth/$th/g coalflow.inp
-#         sed -i s/pdx/$dxM/g coalflow.inp
-# 	sed -i s/pName/$nameM/g coalflow.inp
-             
-# 	# $RunPath coalflow 36
-#         cd ..
-#     done
-#     echo "--------------------------------"
-
-# echo "=============================================="
-
+# BashPath=`dirname $BashFile`
+BashFile=$(readlink -f $0)
+GeomPath=$( printf '%sgeometry' $BashPath)
 
 echo "=============================================="
 echo "Step 1"
@@ -90,7 +62,7 @@ do
          cd $BashPath 
          cd $file
     
-                for th in 60.0 180.0 300.0
+                for th in "${angles[@]}"
                 do
                     echo "th Parameter" $th 
                     mkdir th$th
@@ -103,7 +75,7 @@ do
                     sed -i s/pdy/$dy1/g coalflow.inp
                     sed -i s/pdz/$dz1/g coalflow.inp
 
-                    # $RunPath coalflow 36
+                    $RunPath coalflow 36
                     cd ..
                 done
                 echo "--------------------------------"
@@ -137,7 +109,7 @@ do
                          cd $BashPath 
                          cd $file
                     
-                                for th in 60.0 180.0 300.0
+                                for th in "${angles[@]}"
                                 do
                                     echo "th Parameter" $th 
                                     mkdir th$th
@@ -149,7 +121,8 @@ do
                                     sed -i s/pdx/$dx2/g coalflow.inp
                                     sed -i s/pdy/$dy2/g coalflow.inp
                                     sed -i s/pdz/$dz2/g coalflow.inp                
-                                    #$RunPath coalflow 36
+                                    
+                                    $RunPath coalflow 36
                                     cd ..
                                 done
                                 echo "--------------------------------"
@@ -180,7 +153,7 @@ do
                                          cd $BashPath 
                                          cd $file
                                     
-                                                for th in 60.0 180.0 300.0
+                                                for th in "${angles[@]}"
                                                 do
                                                     echo "th Parameter" $th 
                                                     mkdir th$th
@@ -192,7 +165,7 @@ do
                                                     sed -i s/pdx/$dx3/g coalflow.inp
                                                     sed -i s/pdy/$dy3/g coalflow.inp
                                                     sed -i s/pdz/$dz3/g coalflow.inp                                
-                                                    # $RunPath coalflow 36
+                                                    $RunPath coalflow 36
                                                     cd ..
                                                 done
                                                 echo "--------------------------------"
@@ -224,7 +197,7 @@ do
                                                          cd $BashPath 
                                                          cd $file
                                                     
-                                                                for th in 60.0 180.0 300.0
+                                                                for th in "${angles[@]}"
                                                                 do
                                                                     echo "th Parameter" $th 
                                                                     mkdir th$th
@@ -236,7 +209,8 @@ do
                                                                     sed -i s/pdx/$dx4/g coalflow.inp
                                                                     sed -i s/pdy/$dy4/g coalflow.inp
                                                                     sed -i s/pdz/$dz4/g coalflow.inp                                                
-                                                                    # $RunPath coalflow 36
+                                                                    
+                                                                    $RunPath coalflow 36
                                                                     cd ..
                                                                 done
                                                                 echo "--------------------------------"
@@ -266,7 +240,7 @@ do
                                                                          cd $BashPath 
                                                                          cd $file
                                                                     
-                                                                                for th in 60.0 180.0 300.0
+                                                                                for th in "${angles[@]}"
                                                                                 do
                                                                                     echo "th Parameter" $th 
                                                                                     mkdir th$th
@@ -278,7 +252,8 @@ do
                                                                                     sed -i s/pdx/$dx5/g coalflow.inp
                                                                                     sed -i s/pdy/$dy5/g coalflow.inp
                                                                                     sed -i s/pdz/$dz5/g coalflow.inp                                                                
-                                                                                    #$RunPath coalflow 36
+                                                                                    
+                                                                                    $RunPath coalflow 36
                                                                                     cd ..
                                                                                 done
                                                                                 echo "--------------------------------"
