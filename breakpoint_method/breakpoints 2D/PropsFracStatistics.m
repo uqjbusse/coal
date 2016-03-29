@@ -1,4 +1,4 @@
-function [NoPos, NoNeg, FracDensityPos, FracDensityNeg, FracDensityTotal, AreaFracsNeg, AreaFracsPos,PropsFracsPosFinal,PropsFracsNegFinal, AverageSpacingListPos, AverageSpacingListNeg, AverageSpacingTotalPos, AverageSpacingTotalNeg ] = PropsFracStatistics (FracsPosFinal, FracsNegFinal, BW, display_images,fs, pixelsize)
+function [NoPos, NoNeg, FracDensityPos, FracDensityNeg, FracDensityTotal, AreaFracsNeg, AreaFracsPos,PropsFracsPosFinal,PropsFracsNegFinal, AverageSpacingListPos, AverageSpacingListNeg, AverageSpacingTotalPos, AverageSpacingTotalNeg, LengthFracsNeg, LengthFracsPos ] = PropsFracStatistics (FracsPosFinal, FracsNegFinal, BW, display_images,fs, pixelsize)
 
 %% read all information
 LCCFracsPosFinal = bwlabel(FracsPosFinal);

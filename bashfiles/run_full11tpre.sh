@@ -1,6 +1,8 @@
 BashPath='/home/uqjbusse/numerical/mechsys_frac_flow/modelling/full_run_11Tpre/'
 RunPath='/home/uqjbusse/numerical/mechsys_frac_flow/coalflow/coalflow'
 
+iterations=(1 2 3 4 5)
+
 angles=(60 120 180 240 300 360)
 
 name1=cutTDM800
@@ -30,7 +32,7 @@ dy5=50
 dz5=50
 
 cd
-cd BashPath
+cd $BashPath
 
 
 # BashPath=`dirname $BashFile`
@@ -45,7 +47,7 @@ for i1 in 1
 do
     for j1 in 1
     do
-        for k1 in 1 2 3 4 5
+        for k1 in "${iterations[@]}"
         do 
             rest='000_000_000_000'
             sampleActive1=$( printf '%01d%01d%01d' $i1 $j1 $k1)
@@ -164,7 +166,8 @@ do
                                                     sed -i s/pName/$name3/g coalflow.inp
                                                     sed -i s/pdx/$dx3/g coalflow.inp
                                                     sed -i s/pdy/$dy3/g coalflow.inp
-                                                    sed -i s/pdz/$dz3/g coalflow.inp                                
+                                                    sed -i s/pdz/$dz3/g coalflow.inp
+                                                                                  
                                                     $RunPath coalflow 36
                                                     cd ..
                                                 done

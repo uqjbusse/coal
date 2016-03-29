@@ -1,0 +1,13 @@
+../../binary200.h5   load the binary file
+tdm200          matrix name
+0   Render;
+200  nx
+200  ny
+200   nz
+0.17  nu;    
+5.0e2   Tf;    
+5.0e0   dtOut;
+1      oct
+0.05   Giso or DPx;  
+0.05    G    or Dpy;    
+pth    th   or DPz;    
